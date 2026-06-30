@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 
 const MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -9,7 +8,6 @@ const MONTHS = [
 ]
 
 const DAYS = Array.from({ length: 31 }, (_, i) => i + 1)
-
 const currentYear = new Date().getFullYear()
 const YEARS = Array.from({ length: 120 }, (_, i) => currentYear - i)
 
@@ -74,7 +72,6 @@ function DateSelect({
 }
 
 export default function CreatePage() {
-  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({
     deceasedName: '',
@@ -93,7 +90,7 @@ export default function CreatePage() {
     setLoading(true)
 
     try {
-      const res = await fetch('/api/generate', {
+      const res = await fetch('/api/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
@@ -102,7 +99,8 @@ export default function CreatePage() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error)
 
-      router.push(`/preview?order_id=${data.orderId}`)
+      // Redirect to Stripe checkout
+      window.location.href = data.url
     } catch (err) {
       alert(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
       setLoading(false)
@@ -233,14 +231,12 @@ export default function CreatePage() {
           disabled={loading}
           className="w-full bg-stone-800 text-white py-4 rounded-lg text-lg font-medium hover:bg-stone-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading ? 'Creating your tribute...' : 'Create My Tribute'}
+          {loading ? 'Preparing your order...' : 'Continue to Payment — $39'}
         </button>
 
-        {loading && (
-          <p className="text-center text-stone-500 text-sm">
-            This may take a moment. We&apos;re carefully crafting each piece of your tribute.
-          </p>
-        )}
+        <p className="text-center text-stone-500 text-xs">
+          Secure payment via Stripe · Your tribute is generated immediately after payment · One free revision included
+        </p>
       </form>
     </div>
   )
