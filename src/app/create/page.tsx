@@ -3,6 +3,76 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
+const MONTHS = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
+]
+
+const DAYS = Array.from({ length: 31 }, (_, i) => i + 1)
+
+const currentYear = new Date().getFullYear()
+const YEARS = Array.from({ length: 120 }, (_, i) => currentYear - i)
+
+function DateSelect({
+  label,
+  onChange,
+}: {
+  label: string
+  onChange: (val: string) => void
+}) {
+  const [month, setMonth] = useState('')
+  const [day, setDay] = useState('')
+  const [year, setYear] = useState('')
+
+  const update = (m: string, d: string, y: string) => {
+    if (m && d && y) {
+      const mm = String(MONTHS.indexOf(m) + 1).padStart(2, '0')
+      const dd = String(d).padStart(2, '0')
+      onChange(`${y}-${mm}-${dd}`)
+    } else {
+      onChange('')
+    }
+  }
+
+  const selectClass =
+    'flex-1 px-3 py-3 rounded-lg border border-stone-200 focus:border-stone-400 focus:ring-1 focus:ring-stone-400 outline-none bg-white text-stone-800'
+
+  return (
+    <div>
+      <label className="block text-sm font-medium text-stone-700 mb-1">{label}</label>
+      <div className="flex gap-2">
+        <select
+          required
+          value={month}
+          onChange={(e) => { setMonth(e.target.value); update(e.target.value, day, year) }}
+          className={selectClass}
+        >
+          <option value="">Month</option>
+          {MONTHS.map((m) => <option key={m} value={m}>{m}</option>)}
+        </select>
+        <select
+          required
+          value={day}
+          onChange={(e) => { setDay(e.target.value); update(month, e.target.value, year) }}
+          className="w-20 px-3 py-3 rounded-lg border border-stone-200 focus:border-stone-400 focus:ring-1 focus:ring-stone-400 outline-none bg-white text-stone-800"
+        >
+          <option value="">Day</option>
+          {DAYS.map((d) => <option key={d} value={d}>{d}</option>)}
+        </select>
+        <select
+          required
+          value={year}
+          onChange={(e) => { setYear(e.target.value); update(month, day, e.target.value) }}
+          className="w-28 px-3 py-3 rounded-lg border border-stone-200 focus:border-stone-400 focus:ring-1 focus:ring-stone-400 outline-none bg-white text-stone-800"
+        >
+          <option value="">Year</option>
+          {YEARS.map((y) => <option key={y} value={y}>{y}</option>)}
+        </select>
+      </div>
+    </div>
+  )
+}
+
 export default function CreatePage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
@@ -65,32 +135,15 @@ export default function CreatePage() {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">
-              Date of Birth
-            </label>
-            <input
-              type="date"
-              required
-              value={form.dateOfBirth}
-              onChange={(e) => update('dateOfBirth', e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-stone-200 focus:border-stone-400 focus:ring-1 focus:ring-stone-400 outline-none"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">
-              Date of Passing
-            </label>
-            <input
-              type="date"
-              required
-              value={form.dateOfPassing}
-              onChange={(e) => update('dateOfPassing', e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-stone-200 focus:border-stone-400 focus:ring-1 focus:ring-stone-400 outline-none"
-            />
-          </div>
-        </div>
+        <DateSelect
+          label="Date of Birth"
+          onChange={(val) => update('dateOfBirth', val)}
+        />
+
+        <DateSelect
+          label="Date of Passing"
+          onChange={(val) => update('dateOfPassing', val)}
+        />
 
         <div>
           <label className="block text-sm font-medium text-stone-700 mb-1">
