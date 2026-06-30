@@ -102,7 +102,7 @@ export default function CreatePage() {
       // Redirect to Stripe checkout
       window.location.href = data.url
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
+      alert(err instanceof Error ? err.message : String(err))
       setLoading(false)
     }
   }

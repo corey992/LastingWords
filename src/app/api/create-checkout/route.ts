@@ -25,22 +25,32 @@ export async function POST(req: NextRequest) {
       .select('id')
       .single()
 
-    if (error) throw error
+    if (error) {
+      console.error('Supabase insert error:', error)
+      return NextResponse.json({ error: `Database error: ${error.message}` }, { status: 500 })
+    }
 
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: [{ price: process.env.STRIPE_PRICE_ID!, quantity: 1 }],
-      mode: 'payment',
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?order_id=${data.id}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/create`,
-      metadata: { orderId: data.id },
-    })
+    let session
+    try {
+      session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [{ price: process.env.STRIPE_PRICE_ID!, quantity: 1 }],
+        mode: 'payment',
+        success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?order_id=${data.id}`,
+        cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/create`,
+        metadata: { orderId: data.id },
+      })
+    } catch (stripeErr: unknown) {
+      const msg = stripeErr instanceof Error ? stripeErr.message : String(stripeErr)
+      console.error('Stripe error:', msg)
+      return NextResponse.json({ error: `Payment setup error: ${msg}` }, { status: 500 })
+    }
 
     return NextResponse.json({ url: session.url })
   } catch (err) {
-    console.error('Checkout error:', err)
+    console.error('Unexpected checkout error:', err)
     return NextResponse.json(
-      { error: 'Unable to start checkout. Please try again.' },
+      { error: `Unexpected error: ${err instanceof Error ? err.message : String(err)}` },
       { status: 500 }
     )
   }
