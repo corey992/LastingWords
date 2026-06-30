@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import ReactMarkdown from 'react-markdown'
 
 interface Order {
   id: string
@@ -26,7 +27,7 @@ function SuccessContent() {
     if (!orderId) return
 
     let attempts = 0
-    const maxAttempts = 30 // poll for up to 60 seconds
+    const maxAttempts = 30
 
     const poll = async () => {
       attempts++
@@ -91,8 +92,6 @@ function SuccessContent() {
     )
   }
 
-  const sections = order.generated_content.split(/## /g).filter(Boolean)
-
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
       <div className="text-center mb-10">
@@ -104,17 +103,8 @@ function SuccessContent() {
         </p>
       </div>
 
-      <div className="bg-white rounded-xl border border-stone-200 p-8 mb-8">
-        {sections.map((section, i) => (
-          <div key={i} className="mb-8 last:mb-0 pb-8 last:pb-0 border-b last:border-0 border-stone-100">
-            <h2 className="text-xl font-serif text-stone-800 mb-3">
-              {section.split('\n')[0]}
-            </h2>
-            <div className="text-stone-700 whitespace-pre-wrap leading-relaxed">
-              {section.split('\n').slice(1).join('\n').trim()}
-            </div>
-          </div>
-        ))}
+      <div className="bg-white rounded-xl border border-stone-200 p-8 mb-8 prose prose-stone prose-headings:font-serif prose-headings:font-normal prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-hr:border-stone-200 prose-strong:text-stone-800 prose-em:text-stone-600 max-w-none">
+        <ReactMarkdown>{order.generated_content}</ReactMarkdown>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 mb-6">
