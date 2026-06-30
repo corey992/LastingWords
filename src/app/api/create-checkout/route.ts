@@ -30,14 +30,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: `Database error: ${error.message}` }, { status: 500 })
     }
 
+    const appUrl = (process.env.NEXT_PUBLIC_APP_URL || 'https://lasting-words-one.vercel.app').replace(/\/$/, '')
+
     let session
     try {
       session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: [{ price: process.env.STRIPE_PRICE_ID!, quantity: 1 }],
         mode: 'payment',
-        success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?order_id=${data.id}`,
-        cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/create`,
+        success_url: `${appUrl}/success?order_id=${data.id}`,
+        cancel_url: `${appUrl}/create`,
         metadata: { orderId: data.id },
       })
     } catch (stripeErr: unknown) {
