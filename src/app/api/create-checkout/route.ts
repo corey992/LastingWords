@@ -34,11 +34,6 @@ export async function POST(req: NextRequest) {
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?order_id=${data.id}`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/create`,
       metadata: { orderId: data.id },
-      custom_text: {
-        submit: {
-          message: `Your tribute for ${body.deceasedName} will be ready immediately after payment.`,
-        },
-      },
     })
 
     return NextResponse.json({ url: session.url })
