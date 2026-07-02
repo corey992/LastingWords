@@ -4,7 +4,7 @@ import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
-const APP_URL = 'https://lastingwords.ai'
+const APP_URL = 'https://www.lastingwords.ai'
 
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),

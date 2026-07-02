@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     'LastingWords writes personalized obituaries, eulogies, memorial programs, and tribute speeches for your loved one. AI-powered, compassionate, and ready in minutes. Complete package for $39.',
   alternates: {
-    canonical: 'https://lastingwords.ai',
+    canonical: 'https://www.lastingwords.ai',
   },
 }
 
@@ -144,6 +144,47 @@ export default function HomePage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Price Anchoring + Urgency */}
+      <section className="w-full px-6 py-16 bg-stone-800 text-white">
+        <div className="max-w-3xl mx-auto text-center">
+          <p className="text-stone-300 text-sm font-medium uppercase tracking-widest mb-4">
+            When every hour counts
+          </p>
+          <h2 className="text-2xl md:text-3xl font-serif mb-6">
+            Obituaries are typically needed within 24–48 hours.<br className="hidden md:block" /> We deliver yours in minutes.
+          </h2>
+          <p className="text-stone-300 mb-10 leading-relaxed max-w-2xl mx-auto">
+            A professional obituary writer charges <strong className="text-white">$200–$500</strong> and takes 2–3 days.
+            LastingWords delivers a complete 5-document tribute package — obituary, eulogy, memorial program,
+            social announcement, and thank you card — for <strong className="text-white">$39, in under 10 minutes</strong>.
+          </p>
+          <div className="grid md:grid-cols-3 gap-6 mb-10 text-left">
+            {[
+              { label: 'Human writer', price: '$200–$500', time: '2–3 days', docs: '1 document' },
+              { label: 'Funeral home', price: 'Often included', time: 'Generic template', docs: 'Basic only' },
+              { label: 'LastingWords', price: '$39', time: 'Under 10 minutes', docs: '5 documents', highlight: true },
+            ].map((opt) => (
+              <div
+                key={opt.label}
+                className={`rounded-xl p-6 ${opt.highlight ? 'bg-white text-stone-800' : 'bg-stone-700 text-stone-200'}`}
+              >
+                <p className={`text-xs font-medium uppercase tracking-widest mb-3 ${opt.highlight ? 'text-stone-500' : 'text-stone-400'}`}>{opt.label}</p>
+                <p className={`text-2xl font-serif mb-1 ${opt.highlight ? 'text-stone-800' : 'text-white'}`}>{opt.price}</p>
+                <p className="text-sm mb-1">{opt.time}</p>
+                <p className={`text-sm ${opt.highlight ? 'text-stone-600 font-medium' : 'text-stone-400'}`}>{opt.docs}</p>
+              </div>
+            ))}
+          </div>
+          <a
+            href="/create"
+            className="inline-block bg-white text-stone-800 px-8 py-4 rounded-lg text-lg font-medium hover:bg-stone-100 transition-colors"
+          >
+            Begin Your Tribute — $39
+          </a>
+          <p className="mt-3 text-stone-400 text-sm">One free revision included · Secure payment via Stripe</p>
         </div>
       </section>
 
