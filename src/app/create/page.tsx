@@ -73,7 +73,9 @@ function DateSelect({
 
 export default function CreatePage() {
   const [loading, setLoading] = useState(false)
+  const [loadingMsg, setLoadingMsg] = useState('Preparing your order...')
   const [form, setForm] = useState({
+    customerEmail: '',
     deceasedName: '',
     dateOfBirth: '',
     dateOfPassing: '',
@@ -88,19 +90,29 @@ export default function CreatePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    setLoadingMsg('Creating your tribute...')
 
     try {
-      const res = await fetch('/api/create-checkout', {
+      // Step 1: generate tribute and create order (captures email immediately)
+      const genRes = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       })
+      const genData = await genRes.json()
+      if (!genRes.ok) throw new Error(genData.error)
 
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error)
+      // Step 2: create Stripe checkout session for the order
+      setLoadingMsg('Redirecting to payment...')
+      const checkoutRes = await fetch('/api/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId: genData.orderId }),
+      })
+      const checkoutData = await checkoutRes.json()
+      if (!checkoutRes.ok) throw new Error(checkoutData.error)
 
-      // Redirect to Stripe checkout
-      window.location.href = data.url
+      window.location.href = checkoutData.url
     } catch (err) {
       alert(err instanceof Error ? err.message : String(err))
       setLoading(false)
@@ -119,6 +131,23 @@ export default function CreatePage() {
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        <div>
+          <label className="block text-sm font-medium text-stone-700 mb-1">
+            Your Email Address
+          </label>
+          <input
+            type="email"
+            required
+            value={form.customerEmail}
+            onChange={(e) => update('customerEmail', e.target.value)}
+            className="w-full px-4 py-3 rounded-lg border border-stone-200 focus:border-stone-400 focus:ring-1 focus:ring-stone-400 outline-none"
+            placeholder="you@example.com"
+          />
+          <p className="text-xs text-stone-500 mt-1">
+            We&apos;ll send your completed tribute package here.
+          </p>
+        </div>
+
         <div>
           <label className="block text-sm font-medium text-stone-700 mb-1">
             Their Full Name
@@ -231,7 +260,7 @@ export default function CreatePage() {
           disabled={loading}
           className="w-full bg-stone-800 text-white py-4 rounded-lg text-lg font-medium hover:bg-stone-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading ? 'Preparing your order...' : 'Continue to Payment — $39'}
+          {loading ? loadingMsg : 'Continue to Payment — $39'}
         </button>
 
         <p className="text-center text-stone-500 text-xs">
