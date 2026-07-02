@@ -9,33 +9,50 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { data: totalOrders } = await supabaseAdmin
-    .from('orders')
-    .select('id', { count: 'exact', head: true })
-
-  const { data: paidOrders } = await supabaseAdmin
-    .from('orders')
-    .select('id', { count: 'exact', head: true })
-    .eq('status', 'paid')
-
-  const { data: revisionsUsed } = await supabaseAdmin
-    .from('orders')
-    .select('id', { count: 'exact', head: true })
-    .eq('revision_used', true)
-
   const now = new Date()
   const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+  const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+  const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
 
-  const { data: recentOrders } = await supabaseAdmin
-    .from('orders')
-    .select('id', { count: 'exact', head: true })
-    .gte('created_at', thirtyDaysAgo.toISOString())
+  const [
+    { count: totalOrders },
+    { count: paidOrders },
+    { count: revisionsUsed },
+    { count: ordersLast30Days },
+    { count: ordersLast7Days },
+    { count: ordersThisMonth },
+    { count: paidThisMonth },
+    { data: recentOrdersList },
+  ] = await Promise.all([
+    supabaseAdmin.from('orders').select('*', { count: 'exact', head: true }),
+    supabaseAdmin.from('orders').select('*', { count: 'exact', head: true }).eq('status', 'paid'),
+    supabaseAdmin.from('orders').select('*', { count: 'exact', head: true }).eq('revision_used', true),
+    supabaseAdmin.from('orders').select('*', { count: 'exact', head: true }).gte('created_at', thirtyDaysAgo.toISOString()),
+    supabaseAdmin.from('orders').select('*', { count: 'exact', head: true }).gte('created_at', sevenDaysAgo.toISOString()),
+    supabaseAdmin.from('orders').select('*', { count: 'exact', head: true }).gte('created_at', firstOfMonth.toISOString()),
+    supabaseAdmin.from('orders').select('*', { count: 'exact', head: true }).eq('status', 'paid').gte('paid_at', firstOfMonth.toISOString()),
+    supabaseAdmin.from('orders').select('id, deceased_name, customer_email, status, created_at, paid_at, revision_used').order('created_at', { ascending: false }).limit(10),
+  ])
+
+  const PRICE = 39
+  const totalRevenue = (paidOrders ?? 0) * PRICE
+  const revenueThisMonth = (paidThisMonth ?? 0) * PRICE
+  const conversionRate = totalOrders ? Math.round(((paidOrders ?? 0) / totalOrders) * 100) : 0
 
   return NextResponse.json({
-    total_orders: totalOrders,
-    paid_orders: paidOrders,
-    revisions_used: revisionsUsed,
-    orders_last_30_days: recentOrders,
+    total_orders: totalOrders ?? 0,
+    paid_orders: paidOrders ?? 0,
+    total_revenue: totalRevenue,
+    total_revenue_formatted: `$${totalRevenue.toLocaleString()}`,
+    conversion_rate_pct: conversionRate,
+    revisions_used: revisionsUsed ?? 0,
+    revision_rate_pct: paidOrders ? Math.round(((revisionsUsed ?? 0) / (paidOrders ?? 1)) * 100) : 0,
+    orders_last_7_days: ordersLast7Days ?? 0,
+    orders_last_30_days: ordersLast30Days ?? 0,
+    orders_this_month: ordersThisMonth ?? 0,
+    revenue_this_month: revenueThisMonth,
+    revenue_this_month_formatted: `$${revenueThisMonth.toLocaleString()}`,
+    recent_orders: recentOrdersList ?? [],
     generated_at: now.toISOString(),
   })
 }
