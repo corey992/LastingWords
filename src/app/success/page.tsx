@@ -18,10 +18,17 @@ interface Order {
 function splitVersions(content: string): { versionA: string; versionB: string } {
   const vBIndex = content.indexOf('# VERSION B')
   if (vBIndex === -1) return { versionA: content, versionB: '' }
-  return {
-    versionA: content.slice(0, vBIndex).replace(/^#\s*VERSION A[^\n]*\n/m, '').trim(),
-    versionB: content.slice(vBIndex).replace(/^#\s*VERSION B[^\n]*\n/m, '').trim(),
-  }
+  const rawA = content.slice(0, vBIndex)
+    .replace(/^#\s*VERSION A[^\n]*\n/m, '')  // remove "# VERSION A — ..." header
+    .replace(/\n---\s*$/, '')                  // strip trailing hr separator
+    .replace(/ — VERSION A/g, '')              // clean section sub-labels
+    .trim()
+  const rawB = content.slice(vBIndex)
+    .replace(/^#\s*VERSION B[^\n]*\n/m, '')   // remove "# VERSION B — ..." header
+    .replace(/^ *---\s*\n/, '')                // strip any leading hr
+    .replace(/ — VERSION B/g, '')              // clean section sub-labels
+    .trim()
+  return { versionA: rawA, versionB: rawB }
 }
 
 export default function SuccessPage() {
