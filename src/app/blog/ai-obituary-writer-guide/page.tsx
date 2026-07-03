@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import Link from 'next/link'
 import type { Metadata } from 'next'
 
@@ -53,7 +54,7 @@ export default function AIObituaryWriterGuide() {
           <li><strong>Speed.</strong> A complete tribute in minutes rather than days.</li>
           <li><strong>Structure.</strong> Proper obituary formatting, survivor listings, and service language that newspapers expect.</li>
           <li><strong>Tone calibration.</strong> The ability to write in a faith-based voice, a celebratory voice, or a quiet and reflective one — consistently, across all five documents.</li>
-          <li><strong>Completeness.</strong> Most families don't realize how many documents they need until they're in the middle of planning. A single order covering all five is significant.</li>
+          <li><strong>Completeness.</strong> Most families don&apos;t realize how many documents they need until they&apos;re in the middle of planning. A single order covering all five is significant.</li>
         </ul>
 
         <h2 className="text-xl font-serif text-stone-800 mt-10 mb-3">What to Watch For</h2>

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import Link from 'next/link'
 import type { Metadata } from 'next'
 
@@ -32,7 +33,7 @@ export default function MemorialServiceProgram() {
         <ul className="list-disc pl-6 space-y-2 text-stone-700">
           <li>A photo of your loved one</li>
           <li>Their full name</li>
-          <li>Their birth and death dates (e.g., "March 14, 1948 – June 28, 2026")</li>
+          <li>Their birth and death dates (e.g., &quot;March 14, 1948 – June 28, 2026&quot;)</li>
           <li>Optionally: a brief quote, scripture, or phrase that captured their spirit</li>
         </ul>
         <p>Keep the cover uncluttered. One good photo and clean typography is better than a busy layout.</p>
@@ -46,7 +47,7 @@ export default function MemorialServiceProgram() {
           <li>Opening prayer or moment of silence</li>
           <li>Musical selection (list the song title and performer)</li>
           <li>Scripture reading or poem</li>
-          <li>Eulogy / tribute remarks (with the speaker's name and relationship)</li>
+          <li>Eulogy / tribute remarks (with the speaker&apos;s name and relationship)</li>
           <li>Additional musical selection</li>
           <li>Committal or closing words</li>
           <li>Recessional</li>
@@ -60,7 +61,7 @@ export default function MemorialServiceProgram() {
         <p>A memorial program life tribute should:</p>
         <ul className="list-disc pl-6 space-y-2 text-stone-700">
           <li>Open with something that immediately captures their character or spirit</li>
-          <li>Touch on their life's defining chapters (not a complete biography)</li>
+          <li>Touch on their life&apos;s defining chapters (not a complete biography)</li>
           <li>Include at least one specific memory or characteristic that made them unique</li>
           <li>Close with something that honors their legacy or the love they leave behind</li>
         </ul>

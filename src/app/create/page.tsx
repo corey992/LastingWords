@@ -109,7 +109,7 @@ export default function CreatePage() {
       const checkoutRes = await fetch('/api/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderId: genData.orderId }),
+        body: JSON.stringify({ orderId: genData.orderId, tier: form.tier }),
       })
       const checkoutData = await checkoutRes.json()
       if (!checkoutRes.ok) throw new Error(checkoutData.error)
@@ -135,21 +135,21 @@ export default function CreatePage() {
       {/* Sample Preview */}
       <div className="mb-10 rounded-xl border border-stone-200 bg-white overflow-hidden">
         <div className="bg-stone-50 px-5 py-3 border-b border-stone-200 flex items-center justify-between">
-          <p className="text-xs font-medium text-stone-500 uppercase tracking-widest">Sample — What You'll Receive</p>
+          <p className="text-xs font-medium text-stone-500 uppercase tracking-widest">Sample — What You&apos;ll Receive</p>
           <p className="text-xs text-stone-400">5 documents · Ready in under 10 minutes</p>
         </div>
         <div className="p-5 space-y-5">
           <div>
             <p className="text-xs font-medium text-stone-400 uppercase tracking-wide mb-2">Obituary excerpt</p>
             <p className="text-sm text-stone-700 leading-relaxed italic">
-              "Margaret Anne Williams, 78, of Nashville, Tennessee, passed away peacefully on June 28, 2026, surrounded by her family. Born on March 14, 1948, in Louisville, Kentucky, Margaret spent her life as a devoted mother, gifted gardener, and the kind of neighbor who always had a fresh pie cooling on the windowsill...
+              &ldquo;Margaret Anne Williams, 78, of Nashville, Tennessee, passed away peacefully on June 28, 2026, surrounded by her family. Born on March 14, 1948, in Louisville, Kentucky, Margaret spent her life as a devoted mother, gifted gardener, and the kind of neighbor who always had a fresh pie cooling on the windowsill...
             </p>
             <p className="text-xs text-stone-400 mt-2">Full obituary includes: complete life summary, survivors, service details, and newspaper-ready formatting.</p>
           </div>
           <div className="border-t border-stone-100 pt-5">
             <p className="text-xs font-medium text-stone-400 uppercase tracking-wide mb-2">Eulogy excerpt</p>
             <p className="text-sm text-stone-700 leading-relaxed italic">
-              "My mother had a saying she used whenever one of us was going through something hard: 'This too shall pass, but love doesn't.' I used to think it was just something mothers say. Standing here today, I understand it completely..."
+              &ldquo;My mother had a saying she used whenever one of us was going through something hard: &lsquo;This too shall pass, but love doesn&apos;t.&rsquo; I used to think it was just something mothers say. Standing here today, I understand it completely...&rdquo;
             </p>
             <p className="text-xs text-stone-400 mt-2">Full eulogy is 3–5 minutes, written to be delivered aloud at the service.</p>
           </div>

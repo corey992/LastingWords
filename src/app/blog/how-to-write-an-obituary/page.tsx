@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import Link from 'next/link'
 import type { Metadata } from 'next'
 
@@ -76,13 +77,13 @@ export default function HowToWriteObituary() {
         <h2 className="text-xl font-serif text-stone-800 mt-10 mb-3">Tips for Writing a Meaningful Obituary</h2>
         <ul className="list-disc pl-6 space-y-3 text-stone-700">
           <li><strong>Write how they spoke.</strong> If they were funny, a touch of warmth and wit is appropriate. If they were deeply spiritual, let that come through.</li>
-          <li><strong>Use specific details.</strong> "She made the best peach pie in Shelby County" is more powerful than "she enjoyed baking."</li>
-          <li><strong>Don't over-sanitize.</strong> Honoring a full life means acknowledging its texture — challenges overcome, roads traveled, lessons passed on.</li>
+          <li><strong>Use specific details.</strong> &quot;She made the best peach pie in Shelby County&quot; is more powerful than &quot;she enjoyed baking.&quot;</li>
+          <li><strong>Don&apos;t over-sanitize.</strong> Honoring a full life means acknowledging its texture — challenges overcome, roads traveled, lessons passed on.</li>
           <li><strong>Read it aloud.</strong> If it sounds stiff or formal when spoken, revise it. An obituary should feel human.</li>
           <li><strong>Check newspaper requirements.</strong> Many publications have word limits and formatting requirements. Confirm these before submitting.</li>
         </ul>
 
-        <h2 className="text-xl font-serif text-stone-800 mt-10 mb-3">What If You Can't Find the Words?</h2>
+        <h2 className="text-xl font-serif text-stone-800 mt-10 mb-3">What If You Can&apos;t Find the Words?</h2>
         <p>
           It's entirely normal to sit down to write an obituary and feel completely stuck. You're grieving. The task feels impossibly weighty. You want to get it right, and the pressure of that makes it harder.
         </p>

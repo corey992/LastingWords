@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import Link from 'next/link'
 import type { Metadata } from 'next'
 
@@ -31,7 +32,7 @@ export default function EulogyExamples() {
         <p>
           A great eulogy does three things: it tells the truth about who the person was, it captures something only you could share, and it gives those listening permission to feel both the grief and the love at the same time.
         </p>
-        <p>It doesn't need to be perfectly polished. It needs to be honest.</p>
+        <p>It doesn&apos;t need to be perfectly polished. It needs to be honest.</p>
 
         <h2 className="text-xl font-serif text-stone-800 mt-10 mb-3">Eulogy for a Mother</h2>
         <div className="bg-stone-50 rounded-xl p-6 text-sm italic text-stone-600 leading-relaxed">
@@ -98,12 +99,12 @@ export default function EulogyExamples() {
         <ul className="list-disc pl-6 space-y-2 text-stone-700">
           <li>Practice reading it aloud several times before the service</li>
           <li>Print it in a large font so you can read it easily if your eyes blur with tears</li>
-          <li>Pause when you need to — silences during a eulogy are not awkward; they're respectful</li>
-          <li>It's okay to cry — nobody expects otherwise</li>
+          <li>Pause when you need to — silences during a eulogy are not awkward; they&apos;re respectful</li>
+          <li>It&apos;s okay to cry — nobody expects otherwise</li>
           <li>Have someone nearby who can step in and finish reading if you need them to</li>
         </ul>
 
-        <h2 className="text-xl font-serif text-stone-800 mt-10 mb-3">When You Can't Find the Words</h2>
+        <h2 className="text-xl font-serif text-stone-800 mt-10 mb-3">When You Can&apos;t Find the Words</h2>
         <p>
           Writing a eulogy is hard under any circumstances. Writing it while you're actively grieving, on a deadline, is one of the hardest things a person can be asked to do.
         </p>
