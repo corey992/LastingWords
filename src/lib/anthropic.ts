@@ -30,13 +30,52 @@ export interface TributeInput {
   relationship: string
   personalDetails: string
   tone: string
+  language: string
+  tier: string
   specialRequests?: string
   includeSocialMedia: boolean
   includeThankYou: boolean
 }
 
+const TONE_DESCRIPTIONS: Record<string, string> = {
+  warm: 'Warm and Loving — conversational, intimate, full of love. Feels like a close family member speaking from the heart.',
+  celebratory: 'Celebratory of Life — uplifting and joyful. Focuses on the fullness of their life, the laughter they brought, and the gift of having known them.',
+  reflective: 'Quiet and Reflective — gentle, thoughtful, with a poetic quality. Honors the depth of the loss with grace and stillness.',
+  'faith-based': 'Faith-Based and Hopeful — grounded in spiritual comfort. References eternal life, God\'s grace, and the peace of reunion. Non-denominational but clearly faith-forward.',
+  humorous: 'Warm with Gentle Humor — affectionate and light-hearted where appropriate, celebrating their personality and wit, while remaining dignified and respectful.',
+}
+
+function buildPackageSections(input: TributeInput, versionLabel: string): string {
+  return `
+## OBITUARY${versionLabel}
+Write a complete obituary suitable for newspaper publication and online memorial sites. Include biographical details, survived-by information if provided, and a warm closing.
+
+## MEMORIAL PROGRAM${versionLabel}
+Write copy suitable for a printed memorial/funeral program. Include an opening, a brief life summary, and a closing thought or poem excerpt.
+
+## EULOGY${versionLabel}
+Write a ${input.tier === 'priority' ? '5–7 minute spoken eulogy (approximately 750–1,000 words)' : '3–5 minute spoken eulogy (approximately 500–750 words)'}. Make it personal, warm, and suitable for delivery by the ${input.relationship}. Include natural pauses and emotional moments.
+
+${input.includeSocialMedia ? `## SOCIAL MEDIA ANNOUNCEMENT${versionLabel}
+Write a brief, dignified social media announcement suitable for Facebook or similar platforms. Keep it under 200 words.` : ''}
+
+${input.includeThankYou ? `## THANK YOU CARD${versionLabel}
+Write a brief, heartfelt thank you message suitable for cards sent to those who attended the service or sent condolences. Keep it under 100 words.` : ''}
+
+## MEMORIAL KEEPSAKE${versionLabel}
+Write a short 4–6 line memorial poem or verse — something beautiful that could be printed on a keepsake card or memorial program. It should feel timeless and personal to ${input.deceasedName}.`
+}
+
 export async function generateTributePackage(input: TributeInput) {
-  const userPrompt = `Please write a complete memorial tribute package for ${input.deceasedName}.
+  const toneA = TONE_DESCRIPTIONS[input.tone] || TONE_DESCRIPTIONS['warm']
+  const alternativeTone = input.tone === 'warm' ? 'reflective' : input.tone === 'celebratory' ? 'warm' : 'celebratory'
+  const toneB = TONE_DESCRIPTIONS[alternativeTone]
+
+  const languageInstruction = input.language && input.language !== 'en'
+    ? `\n\nIMPORTANT: Write the ENTIRE tribute package — both versions — in ${input.language}. Every word must be in ${input.language}.`
+    : ''
+
+  const userPrompt = `Please write TWO complete memorial tribute packages for ${input.deceasedName}. Each version should feel fully realized — not a variation, but a distinct and complete tribute in a different voice.
 
 Details:
 - Full Name: ${input.deceasedName}
@@ -44,29 +83,24 @@ Details:
 - Date of Passing: ${input.dateOfPassing}
 - Your relationship: ${input.relationship}
 - Personal details, memories, and qualities: ${input.personalDetails}
-- Desired tone: ${input.tone}
 ${input.specialRequests ? `- Special requests: ${input.specialRequests}` : ''}
+${languageInstruction}
 
-Please provide the following sections, clearly separated with headers:
+---
 
-## OBITUARY
-Write a complete obituary suitable for newspaper publication and online memorial sites. Include biographical details, survived-by information if provided, and a warm closing.
+# VERSION A — ${toneA}
 
-## MEMORIAL PROGRAM
-Write copy suitable for a printed memorial/funeral program. Include an opening, a brief life summary, and a closing thought or poem excerpt.
+${buildPackageSections(input, ' — VERSION A')}
 
-## EULOGY
-Write a 3-5 minute spoken eulogy (approximately 500-750 words). Make it personal, warm, and suitable for delivery by the ${input.relationship}. Include natural pauses and emotional moments.
+---
 
-${input.includeSocialMedia ? `## SOCIAL MEDIA ANNOUNCEMENT
-Write a brief, dignified social media announcement suitable for Facebook or similar platforms. Keep it under 200 words.` : ''}
+# VERSION B — ${toneB}
 
-${input.includeThankYou ? `## THANK YOU CARD
-Write a brief, heartfelt thank you message suitable for cards sent to those who attended the service or sent condolences. Keep it under 100 words.` : ''}`
+${buildPackageSections(input, ' — VERSION B')}`
 
   const response = await anthropic.messages.create({
     model: 'claude-sonnet-4-6',
-    max_tokens: 4096,
+    max_tokens: 8000,
     system: [
       {
         type: 'text',

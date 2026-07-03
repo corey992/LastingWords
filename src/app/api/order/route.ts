@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
 
   const { data, error } = await supabaseAdmin
     .from('orders')
-    .select('id, deceased_name, generated_content, status, revision_used')
+    .select('id, deceased_name, generated_content, status, revision_used, revision_notes, input_data')
     .eq('id', orderId)
     .single()
 

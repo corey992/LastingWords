@@ -6,41 +6,50 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
 
-    if (!body.deceasedName || !body.personalDetails) {
+    const { orderId, tier: rawTier } = body
+
+    if (!orderId) {
       return NextResponse.json(
-        { error: 'Please provide the required details about your loved one.' },
+        { error: 'Order ID is required.' },
         { status: 400 }
       )
     }
 
-    // Save form data first, generate tribute AFTER payment in webhook
-    const { data, error } = await supabaseAdmin
+    // Order was already created by /api/generate — just look it up
+    const { data: order, error: fetchError } = await supabaseAdmin
       .from('orders')
-      .insert({
-        deceased_name: body.deceasedName,
-        input_data: body,
-        generated_content: '',
-        status: 'pending',
-      })
-      .select('id')
+      .select('id, deceased_name')
+      .eq('id', orderId)
       .single()
 
-    if (error) {
-      console.error('Supabase insert error:', error)
-      return NextResponse.json({ error: `Database error: ${error.message}` }, { status: 500 })
+    if (fetchError || !order) {
+      return NextResponse.json({ error: 'Order not found.' }, { status: 404 })
     }
 
     const appUrl = (process.env.NEXT_PUBLIC_APP_URL || 'https://lasting-words-one.vercel.app').replace(/\/$/, '')
+
+    const tier = rawTier === 'priority' ? 'priority' : 'standard'
+    const unitAmount = tier === 'priority' ? 5900 : 3900
+    const productName = tier === 'priority'
+      ? 'LastingWords Priority Memorial Tribute Package'
+      : 'LastingWords Memorial Tribute Package'
 
     let session
     try {
       session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
-        line_items: [{ price: process.env.STRIPE_PRICE_ID!, quantity: 1 }],
+        line_items: [{
+          price_data: {
+            currency: 'usd',
+            product_data: { name: productName },
+            unit_amount: unitAmount,
+          },
+          quantity: 1,
+        }],
         mode: 'payment',
-        success_url: `${appUrl}/success?order_id=${data.id}`,
+        success_url: `${appUrl}/success?order_id=${order.id}`,
         cancel_url: `${appUrl}/create`,
-        metadata: { orderId: data.id },
+        metadata: { orderId: order.id },
       })
     } catch (stripeErr: unknown) {
       const msg = stripeErr instanceof Error ? stripeErr.message : String(stripeErr)

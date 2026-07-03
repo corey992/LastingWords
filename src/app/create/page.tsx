@@ -82,6 +82,8 @@ export default function CreatePage() {
     relationship: '',
     personalDetails: '',
     tone: 'warm',
+    language: 'en',
+    tier: 'standard',
     specialRequests: '',
     includeSocialMedia: true,
     includeThankYou: true,
@@ -235,8 +237,11 @@ export default function CreatePage() {
 
         <div>
           <label className="block text-sm font-medium text-stone-700 mb-1">
-            Desired Tone
+            Tone for Version A
           </label>
+          <p className="text-xs text-stone-500 mb-2">
+            You&apos;ll receive two complete tribute versions. Choose the tone for your primary version — we&apos;ll write a beautiful alternative as well.
+          </p>
           <select
             value={form.tone}
             onChange={(e) => update('tone', e.target.value)}
@@ -247,6 +252,28 @@ export default function CreatePage() {
             <option value="reflective">Quiet and Reflective</option>
             <option value="faith-based">Faith-Based and Hopeful</option>
             <option value="humorous">Warm with Gentle Humor</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-stone-700 mb-1">
+            Language
+          </label>
+          <select
+            value={form.language}
+            onChange={(e) => update('language', e.target.value)}
+            className="w-full px-4 py-3 rounded-lg border border-stone-200 focus:border-stone-400 focus:ring-1 focus:ring-stone-400 outline-none"
+          >
+            <option value="en">English</option>
+            <option value="Spanish">Spanish</option>
+            <option value="French">French</option>
+            <option value="Portuguese">Portuguese</option>
+            <option value="Italian">Italian</option>
+            <option value="German">German</option>
+            <option value="Polish">Polish</option>
+            <option value="Tagalog">Tagalog</option>
+            <option value="Vietnamese">Vietnamese</option>
+            <option value="Mandarin Chinese">Mandarin Chinese</option>
           </select>
         </div>
 
@@ -284,16 +311,69 @@ export default function CreatePage() {
           </label>
         </div>
 
+        <div>
+          <label className="block text-sm font-medium text-stone-700 mb-3">Choose Your Package</label>
+          <div className="grid sm:grid-cols-2 gap-3">
+            <label
+              className={`relative flex flex-col p-4 rounded-xl border-2 cursor-pointer transition-colors ${
+                form.tier === 'standard' ? 'border-stone-800 bg-stone-50' : 'border-stone-200 hover:border-stone-300'
+              }`}
+            >
+              <input
+                type="radio"
+                name="tier"
+                value="standard"
+                checked={form.tier === 'standard'}
+                onChange={() => update('tier', 'standard')}
+                className="sr-only"
+              />
+              <span className="text-base font-semibold text-stone-800">Standard</span>
+              <span className="text-2xl font-light text-stone-800 mt-1">$39</span>
+              <ul className="mt-2 space-y-1 text-xs text-stone-600">
+                <li>✓ 2 complete tribute versions</li>
+                <li>✓ Obituary, eulogy, program copy</li>
+                <li>✓ Memorial keepsake poem</li>
+                <li>✓ One free revision</li>
+              </ul>
+            </label>
+            <label
+              className={`relative flex flex-col p-4 rounded-xl border-2 cursor-pointer transition-colors ${
+                form.tier === 'priority' ? 'border-stone-800 bg-stone-50' : 'border-stone-200 hover:border-stone-300'
+              }`}
+            >
+              <input
+                type="radio"
+                name="tier"
+                value="priority"
+                checked={form.tier === 'priority'}
+                onChange={() => update('tier', 'priority')}
+                className="sr-only"
+              />
+              <div className="flex items-start justify-between">
+                <span className="text-base font-semibold text-stone-800">Priority</span>
+                <span className="text-xs bg-stone-800 text-white px-2 py-0.5 rounded-full">Most Popular</span>
+              </div>
+              <span className="text-2xl font-light text-stone-800 mt-1">$59</span>
+              <ul className="mt-2 space-y-1 text-xs text-stone-600">
+                <li>✓ Everything in Standard</li>
+                <li>✓ Priority processing</li>
+                <li>✓ Extended eulogy (5–7 min)</li>
+                <li>✓ Two free revisions</li>
+              </ul>
+            </label>
+          </div>
+        </div>
+
         <button
           type="submit"
           disabled={loading}
           className="w-full bg-stone-800 text-white py-4 rounded-lg text-lg font-medium hover:bg-stone-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading ? loadingMsg : 'Continue to Payment — $39'}
+          {loading ? loadingMsg : `Continue to Payment — ${form.tier === 'priority' ? '$59' : '$39'}`}
         </button>
 
         <p className="text-center text-stone-500 text-xs">
-          Secure payment via Stripe · Your tribute is generated immediately after payment · One free revision included
+          Secure payment via Stripe · Your tribute is generated immediately after payment · Revision included
         </p>
       </form>
     </div>

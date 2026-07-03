@@ -7,3 +7,24 @@
     @apply leading-relaxed;
   }
 }
+
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+    font-family: Georgia, serif;
+  }
+  nav, header, footer, .print\:hidden {
+    display: none !important;
+  }
+  main {
+    min-height: unset !important;
+  }
+  h1, h2, h3 {
+    page-break-after: avoid;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+}
