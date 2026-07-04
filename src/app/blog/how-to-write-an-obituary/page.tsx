@@ -108,6 +108,15 @@ export default function HowToWriteObituary() {
         </Link>
       </div>
 
+      <div className="mt-12 p-5 rounded-xl border border-stone-100 bg-stone-50/50">
+        <p className="text-xs font-medium text-stone-400 uppercase tracking-wide mb-3">Related guides</p>
+        <ul className="space-y-2 text-sm">
+          <li><Link href="/blog/eulogy-examples" className="text-stone-700 hover:underline">Eulogy Examples for Mother, Father, Husband, Wife & More</Link></li>
+          <li><Link href="/blog/memorial-service-program" className="text-stone-700 hover:underline">What to Include in a Memorial Service Program</Link></li>
+          <li><Link href="/blog/thank-you-card-wording-after-funeral" className="text-stone-700 hover:underline">Thank You Card Wording After a Funeral</Link></li>
+        </ul>
+      </div>
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

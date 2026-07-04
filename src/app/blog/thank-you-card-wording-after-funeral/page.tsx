@@ -87,6 +87,29 @@ export default function ThankYouCardWording() {
         </Link>
       </div>
 
+      <div className="mt-12 p-5 rounded-xl border border-stone-100 bg-stone-50/50">
+        <p className="text-xs font-medium text-stone-400 uppercase tracking-wide mb-3">Related guides</p>
+        <ul className="space-y-2 text-sm">
+          <li><Link href="/blog/how-to-write-an-obituary" className="text-stone-700 hover:underline">How to Write an Obituary: A Complete Guide</Link></li>
+          <li><Link href="/blog/eulogy-examples" className="text-stone-700 hover:underline">Eulogy Examples for Mother, Father, Husband, Wife & More</Link></li>
+          <li><Link href="/blog/memorial-service-program" className="text-stone-700 hover:underline">What to Include in a Memorial Service Program</Link></li>
+        </ul>
+      </div>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Article',
+            headline: 'Thank You Card Wording After a Funeral: Examples & What to Write',
+            author: { '@type': 'Organization', name: 'LastingWords' },
+            publisher: { '@type': 'Organization', name: 'LastingWords', url: 'https://www.lastingwords.ai' },
+            url: 'https://www.lastingwords.ai/blog/thank-you-card-wording-after-funeral',
+          }),
+        }}
+      />
+
       <footer className="mt-16 pt-8 border-t border-stone-200 text-sm text-stone-400 text-center">
         <Link href="/" className="hover:underline">← Back to LastingWords</Link>
       </footer>
