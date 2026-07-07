@@ -16,6 +16,7 @@ export default function CreatePage() {
     specialRequests: '',
     includeSocialMedia: true,
     includeThankYou: true,
+    language: 'en' as 'en' | 'es',
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -42,12 +43,39 @@ export default function CreatePage() {
   const update = (field: string, value: string | boolean) =>
     setForm((prev) => ({ ...prev, [field]: value }))
 
+  const isSpanish = form.language === 'es'
+
   return (
     <div className="max-w-2xl mx-auto px-6 py-12">
-      <h1 className="text-3xl font-serif text-stone-800 mb-2">Tell Us About Your Loved One</h1>
+      <div className="flex items-start justify-between gap-4 mb-2">
+        <h1 className="text-3xl font-serif text-stone-800">
+          {isSpanish ? 'Cuéntenos Sobre Su Ser Querido' : 'Tell Us About Your Loved One'}
+        </h1>
+        <div className="flex rounded-lg border border-stone-200 overflow-hidden shrink-0 mt-1">
+          <button
+            type="button"
+            onClick={() => update('language', 'en')}
+            className={`px-3 py-1.5 text-sm font-medium transition-colors ${
+              !isSpanish ? 'bg-stone-800 text-white' : 'text-stone-600 hover:bg-stone-50'
+            }`}
+          >
+            English
+          </button>
+          <button
+            type="button"
+            onClick={() => update('language', 'es')}
+            className={`px-3 py-1.5 text-sm font-medium transition-colors ${
+              isSpanish ? 'bg-stone-800 text-white' : 'text-stone-600 hover:bg-stone-50'
+            }`}
+          >
+            Español
+          </button>
+        </div>
+      </div>
       <p className="text-stone-600 mb-8">
-        Share as much or as little as you feel comfortable with. Every detail helps us
-        create a tribute that truly honors their life.
+        {isSpanish
+          ? 'Comparta todo lo que desee. Cada detalle nos ayuda a crear un tributo que verdaderamente honre su vida.'
+          : 'Share as much or as little as you feel comfortable with. Every detail helps us create a tribute that truly honors their life.'}
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -180,12 +208,16 @@ export default function CreatePage() {
           disabled={loading}
           className="w-full bg-stone-800 text-white py-4 rounded-lg text-lg font-medium hover:bg-stone-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading ? 'Creating your tribute...' : 'Create My Tribute'}
+          {loading
+            ? (isSpanish ? 'Creando su tributo...' : 'Creating your tribute...')
+            : (isSpanish ? 'Crear Mi Tributo' : 'Create My Tribute')}
         </button>
 
         {loading && (
           <p className="text-center text-stone-500 text-sm">
-            This may take a moment. We&apos;re carefully crafting each piece of your tribute.
+            {isSpanish
+              ? 'Esto puede tomar un momento. Estamos elaborando cuidadosamente cada parte de su tributo.'
+              : 'This may take a moment. We\'re carefully crafting each piece of your tribute.'}
           </p>
         )}
       </form>

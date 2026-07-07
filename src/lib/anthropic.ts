@@ -25,10 +25,16 @@ export interface TributeInput {
   specialRequests?: string
   includeSocialMedia: boolean
   includeThankYou: boolean
+  language?: 'en' | 'es'
 }
 
 export async function generateTributePackage(input: TributeInput) {
-  const userPrompt = `Please write a complete memorial tribute package for ${input.deceasedName}.
+  const isSpanish = input.language === 'es'
+  const languageInstruction = isSpanish
+    ? 'Write the entire tribute package in Spanish. Use natural, heartfelt Spanish — not a translation. All section headers must also be in Spanish.'
+    : ''
+
+  const userPrompt = `${languageInstruction ? languageInstruction + '\n\n' : ''}Please write a complete memorial tribute package for ${input.deceasedName}.
 
 Details:
 - Full Name: ${input.deceasedName}
@@ -39,21 +45,21 @@ Details:
 - Desired tone: ${input.tone}
 ${input.specialRequests ? `- Special requests: ${input.specialRequests}` : ''}
 
-Please provide the following sections, clearly separated with headers:
+Please provide the following sections, clearly separated with headers${isSpanish ? ' (use Spanish headers as noted)' : ''}:
 
-## OBITUARY
+## ${isSpanish ? 'OBITUARIO' : 'OBITUARY'}
 Write a complete obituary suitable for newspaper publication and online memorial sites. Include biographical details, survived-by information if provided, and a warm closing.
 
-## MEMORIAL PROGRAM
+## ${isSpanish ? 'PROGRAMA MEMORIAL' : 'MEMORIAL PROGRAM'}
 Write copy suitable for a printed memorial/funeral program. Include an opening, a brief life summary, and a closing thought or poem excerpt.
 
-## EULOGY
+## ${isSpanish ? 'ELOGIO FÚNEBRE' : 'EULOGY'}
 Write a 3-5 minute spoken eulogy (approximately 500-750 words). Make it personal, warm, and suitable for delivery by the ${input.relationship}. Include natural pauses and emotional moments.
 
-${input.includeSocialMedia ? `## SOCIAL MEDIA ANNOUNCEMENT
+${input.includeSocialMedia ? `## ${isSpanish ? 'ANUNCIO EN REDES SOCIALES' : 'SOCIAL MEDIA ANNOUNCEMENT'}
 Write a brief, dignified social media announcement suitable for Facebook or similar platforms. Keep it under 200 words.` : ''}
 
-${input.includeThankYou ? `## THANK YOU CARD
+${input.includeThankYou ? `## ${isSpanish ? 'TARJETA DE AGRADECIMIENTO' : 'THANK YOU CARD'}
 Write a brief, heartfelt thank you message suitable for cards sent to those who attended the service or sent condolences. Keep it under 100 words.` : ''}`
 
   const response = await anthropic.messages.create({
