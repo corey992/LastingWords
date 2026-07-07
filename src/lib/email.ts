@@ -1,11 +1,15 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY!)
+let _resend: Resend | null = null
+function getResend() {
+  if (!_resend) _resend = new Resend(process.env.RESEND_API_KEY!)
+  return _resend
+}
 
 export async function sendOrderConfirmation(to: string, name: string, orderId: string) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL!
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: 'LastingWords <noreply@lastingwords.co>',
     to,
     subject: `Your tribute for ${name} is ready`,
