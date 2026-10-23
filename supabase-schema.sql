@@ -14,6 +14,9 @@ create table if not exists orders (
   revision_notes text,
   customer_email text
 );
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.orders TO anon;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.orders TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.orders TO service_role;
 
 -- Enable RLS
 alter table orders enable row level security;
